@@ -14,25 +14,119 @@ namespace Karesz
     {
         // eljárás
 
-        void Kiszabadul_1() 
-        {
 
+        /*
+        bool Van_e_előttem_baj()
+		{
+            return Van_e_előttem_fal() || Kilépek_e_a_pályáról();
+		}
+        */
+
+        bool Van_e_előttem_baj() => Van_e_előttem_fal() || Kilépek_e_a_pályáról();
+        void Hátra_arc()
+		{
+            Fordulj(jobbra);
+            Fordulj(jobbra);
+        }
+        void Hátra_lépj()
+		{
+            Hátra_arc();
             Lépj();
+            Hátra_arc();
         }
 
+        /// <summary>
+        /// 1-et próbálkozó eljárás
+        /// </summary>
+        /// <returns></returns>
+        bool Ha_van_kavics_idelepek(int irány)
+		{
+			if (irány!=0)
+			{
+                Fordulj(irány);
+			}
+
+
+            if (Van_e_előttem_baj())
+            {
+                return false;
+            }
+            else // <- ennek most sok jelentősége nincs, mert a return egyből befejezi a függvényt
+            {
+                Lépj();
+				if (Van_e_itt_Kavics())
+				{
+                    Vegyél_fel_egy_kavicsot();
+                    return true;
+				}
+                else // szintén egy "felesleges" else
+				{
+                    Hátra_lépj();
+					if (irány!=0)
+					{
+                        Fordulj(-irány);
+					}
+                    return false;
+				}
+
+			}
+		}
+
+        Random r = new Random();
+
+        int előre = 0;
         void DIÁK_ROBOTJAI()
         {
+            int szam = r.Next(1, 7);
             Robot karesz = Robot.Get("Karesz");
 
             karesz.Feladat = delegate ()
             {
-                Kiszabadul_1();
-                
+				if (Van_e_itt_Kavics())
+				{
+                    Vegyél_fel_egy_kavicsot();
+				}
+
+
+                // vázlatos! le fogjuk majd egyszerűsíteni NAGYON!
+
+                /*
+                bool vége = false;
+				while (!vége)
+				{
+                    bool volt_elottem_kavics = Ha_van_kavics_idelepek(előre); // itt előrelép!
+                    if (!volt_elottem_kavics)
+				    {
+                        bool volt_jobbra_kavics = Ha_van_kavics_idelepek(jobbra);
+                        if (!volt_jobbra_kavics)
+					    {
+                            bool volt_balra_kavics = Ha_van_kavics_idelepek(balra);
+                            if (!volt_balra_kavics)
+						    {
+                                karesz.Mondd("ennyi volt");
+                                vége = true;
+						    }
+					    }
+				    }
+				}
+                */
+
+                /*
+                bool vége = false;
+                while (!vége)
+                {
+                    if (!Ha_van_kavics_idelepek(előre) && !Ha_van_kavics_idelepek(jobbra) && !Ha_van_kavics_idelepek(balra))
+                    {
+                        karesz.Mondd("ennyi volt");
+                        vége = true;
+                    }
+                }
+                 */
+
+                while (Ha_van_kavics_idelepek(előre) || Ha_van_kavics_idelepek(jobbra) || Ha_van_kavics_idelepek(balra)){}
+                karesz.Mondd("ennyi volt!");
 
             };
-
-            //Atlosan_lepj_jobbra_es_elore();
-
         }
     }
 }
