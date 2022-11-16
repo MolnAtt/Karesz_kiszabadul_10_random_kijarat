@@ -72,6 +72,66 @@ namespace Karesz
 			}
 		}
 
+        bool Próbálkozzunk(int irány)
+        {
+            if (irány != 0)
+            {
+                Fordulj(irány);
+            }
+
+
+            if (Van_e_előttem_baj())
+            {
+                return false;
+            }
+            else // <- ennek most sok jelentősége nincs, mert a return egyből befejezi a függvényt
+            {
+                Lépj();
+                if (Van_e_itt_Kavics())
+                {
+                    Vegyél_fel_egy_kavicsot();
+
+                    // Vektor helye = Robot.akit_kiválasztottak.h;
+                    //Robot.akit_kiválasztottak.Mondd($"Próbálkozom");
+
+                    /*
+                    bool előre_mentem = Próbálkozzunk(előre);
+                    bool jobbra_mentem = !előre_mentem && Próbálkozzunk(jobbra);
+                    bool balra_mentem = !előre_mentem && !jobbra_mentem && Próbálkozzunk(balra);
+                    */
+                    bool felesleges_eltárolni = Próbálkozzunk(előre) || Próbálkozzunk(jobbra) || Próbálkozzunk(balra); // ez az új sor!
+																													   //Robot.akit_kiválasztottak.Mondd($"Próbálkozást befejeztem, itt vagyok most: {helye}");
+                    /*
+					if (előre_mentem||jobbra_mentem||balra_mentem)
+					{
+                        Hátra_lépj();
+					}
+
+                    if (jobbra_mentem)
+					{
+                        Fordulj(balra);
+					}
+
+                    if (balra_mentem)
+                    {
+                        Fordulj(jobbra);
+                    }
+                    */
+
+                    return true;
+                }
+                else // szintén egy "felesleges" else
+                {
+                    Hátra_lépj();
+                    if (irány != 0)
+                    {
+                        Fordulj(-irány);
+                    }
+                    return false;
+                }
+            }
+        }
+
         Random r = new Random();
 
         int előre = 0;
@@ -123,7 +183,13 @@ namespace Karesz
                 }
                  */
 
-                while (Ha_van_kavics_idelepek(előre) || Ha_van_kavics_idelepek(jobbra) || Ha_van_kavics_idelepek(balra)){}
+                // Nem rekurzív megoldás
+                // while (Ha_van_kavics_idelepek(előre) || Ha_van_kavics_idelepek(jobbra) || Ha_van_kavics_idelepek(balra)){}
+                // Rekurzív megoldás
+
+                bool felesleges_változó = Próbálkozzunk(előre) || Próbálkozzunk(jobbra) || Próbálkozzunk(balra);
+
+
                 karesz.Mondd("ennyi volt!");
 
             };
